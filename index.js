@@ -4,11 +4,11 @@ const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 
-const movieRouter = require("./api/routes/movie_routes");
-const { connectDB } = require("./api/config/database");
-const userRouter = require("./api/routes/user_routes");
-const reviewRouter = require("./api/routes/review_routes");
-const chatRouter = require("./api/routes/review_routes");
+const movieRouter = require("./routes/movie_routes");
+const { connectDB } = require("./config/database");
+const userRouter = require("./routes/user_routes");
+const reviewRouter = require("./routes/review_routes");
+const chatRouter = require("./routes/review_routes");
 
 const app = express();
 

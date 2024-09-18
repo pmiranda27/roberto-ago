@@ -12,7 +12,8 @@ exports.Review = async (req, res) => {
   const novoReview = new Review({
     name,
     email,
-    avaliacao
+    avaliacao,
+    privado: privado || false  //Eu defini 'privado' como false se não for fornecido
   });
   
   try {

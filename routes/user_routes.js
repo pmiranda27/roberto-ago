@@ -32,6 +32,8 @@ router.post('/atualizar-avatar', userController.atualizarAvatar);
 router.post('/atualizar-bio', userController.atualizarBio);
 router.post('/atualizar-senha', userController.atualizarSenha);
 
+router.post
+
 
 
 module.exports = router;

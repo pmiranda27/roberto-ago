@@ -6,6 +6,7 @@ const AmigoModel = require("../model/amigo_model");
 const NotificacaoModel = require("../model/notificacao_model");
 const FriendRequestModel = require("../model/friend_request_model");
 
+
 const mongoose = require("mongoose");
 
 const { ObjectId } = mongoose.Types;
@@ -667,5 +668,53 @@ exports.desbloquearUsuario = async (req, res) => {
     return res.status(200).json({ message: "Usuário desbloqueado com sucesso" });
   } catch (error) {
     return res.status(500).json({ message: "Erro ao desbloquear usuário" });
+  }
+};
+
+exports.favoritarFilme = async (req, res) => {
+  const { userId, movieId, title, posterPath, releaseDate } = req.body;
+
+  try {
+    // Verificar se o filme já está favoritado por esse usuário
+    const filmeJaFavoritado = await Favorito.findOne({ userId, movieId });
+
+    if (filmeJaFavoritado) {
+      return res.status(400).json({ message: 'Filme já está favoritado!' });
+    }
+
+    // Criar um novo favorito
+    const novoFavorito = new Favorito({
+      userId,
+      movieId,
+      title,
+      posterPath,
+      releaseDate
+    });
+
+    // Salvar o novo favorito no banco de dados
+    await novoFavorito.save();
+
+    res.status(201).json({ message: 'Filme favoritado com sucesso!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro ao favoritar o filme', error });
+  }
+};
+
+exports.retirarFavorito = async (req, res) => {
+  const { userId, movieId } = req.body;
+
+  try {
+    // Procurar e remover o favorito baseado no userId e movieId
+    const favorito = await Favorito.findOneAndDelete({ userId, movieId });
+
+    if (!favorito) {
+      return res.status(404).json({ message: 'Filme não encontrado nos favoritos' });
+    }
+
+    res.status(200).json({ message: 'Filme removido dos favoritos com sucesso!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro ao remover o filme dos favoritos', error });
   }
 };

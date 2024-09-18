@@ -6,7 +6,11 @@ const reviewSchema = new mongoose.Schema({
   descricao: String,
   assistidoPor: Array,
   nota: Number,
-  comentarios: Array
+  comentarios: Array,
+  privado: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const Review = mongoose.model('review', reviewSchema);
