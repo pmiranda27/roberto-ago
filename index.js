@@ -9,6 +9,7 @@ const { connectDB } = require("./config/database");
 const userRouter = require("./routes/user_routes");
 const reviewRouter = require("./routes/review_routes");
 const chatRouter = require("./routes/review_routes");
+const messageRoutes = require('./routes/message_routes');
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use("/user", userRouter);
 app.use("/reviews", reviewRouter);
 app.use("/movies", movieRouter);
 app.use("/chat", chatRouter);
+app.use('/mensagem', messageRoutes);
 
 //define o ouvinte
 app.listen(PORT, () => {
