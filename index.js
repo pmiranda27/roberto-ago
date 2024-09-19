@@ -48,7 +48,7 @@ app.use("/user", userRouter);
 app.use("/reviews", reviewRouter);
 app.use("/movies", movieRouter);
 app.use("/chat", chatRouter);
-app.use('/mensagem', messageRoutes);
+app.use("/mensagem", messageRoutes);
 
 //define o ouvinte
 app.listen(PORT, () => {
