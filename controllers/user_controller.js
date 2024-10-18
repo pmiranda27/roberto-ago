@@ -153,20 +153,25 @@ exports.criarUsuario = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  try {
+    console.log('entrei 1');
     const { email, password } = req.body;
+  try {
     const usuario = await User.findOne({ email });
-
+    console.log('entrei 2');
+    
     if (!usuario) {
       return res.status(401).json({ message: "Usuário inexistente!" });
     }
+    console.log('entrei 3');
 
     bcrypt.compare(password, usuario.password, (error, data) => {
+      console.log('entrei 4 COMPARADO');
       if (error) {
         throw error;
       }
 
       if (data) {
+        console.log('entrei assiandn');
         const loginToken = jsonwebtoken.sign(
           {
             id: usuario._id,
@@ -178,9 +183,11 @@ exports.login = async (req, res) => {
           { expiresIn: "12h" },
         );
 
+        console.log('LOGUEI O: ', usuario.name)
+
         res
           .status(200)
-          .json({ message: "Login realizado com sucesso!", token: loginToken });
+          .json({ message: "Login realizado com sucesso!", usuario: usuario.name, avatar: usuario.avatar, token: loginToken });
       } else {
         res.status(401).json({ message: "Senha incorreta!" });
       }

@@ -4,6 +4,10 @@ const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 
+
+const webSocket = require('ws');
+const webSocketController = require('./controllers/web_socket_chat')
+
 const movieRouter = require("./routes/movie_routes");
 const { connectDB } = require("./config/database");
 const userRouter = require("./routes/user_routes");
@@ -13,14 +17,18 @@ const messageRoutes = require('./routes/message_routes');
 
 const app = express();
 
-const corsConfig = {
-  credentials: true,
-  origin: true,
+const corsOptions = {
+  origin: '*',
+  methods: 'GET, POST, PUT, DELETE, OPTIONS',
+  allowedHeaders: 'Content-Type, Authorization',
+  credentials: true, 
 };
 
 //define os middlewares
-app.use(cors(corsConfig));
-app.options("*", cors(corsConfig));
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+app.use(cookieParser());
+app.use(express.json());
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -33,8 +41,6 @@ app.use((req, res, next) => {
 
   next();
 });
-app.use(cookieParser());
-app.use(express.json());
 
 //define o ponto de partida da aplicação
 
@@ -51,6 +57,8 @@ app.use("/chat", chatRouter);
 app.use("/mensagem", messageRoutes);
 
 //define o ouvinte
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
+
+webSocketController(server)
