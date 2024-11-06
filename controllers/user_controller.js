@@ -17,6 +17,7 @@ exports.buscarAmigos = async (req, res) => {
   try {
     const findUser = await User.findOne({ email });
     const listaAmigos = findUser.amigos;
+    console.log(listaAmigos)
     return res.status(200).json(listaAmigos);
   } catch (err) {
     return res
@@ -40,7 +41,7 @@ exports.adicionarAmigo = async (req, res) => {
 
   const avatarFriend = findFriend.avatar;
 
-  const newFriend = new AmigoModel(findFriend.name, emailFriend, avatarFriend);
+  const newFriend = new AmigoModel(findFriend.username, emailFriend, avatarFriend);
   try {
     findUser = await User.findOneAndUpdate(
       { email },
@@ -105,7 +106,7 @@ exports.removerAmigo = async (req, res) => {
 
 exports.criarUsuario = async (req, res) => {
   console.log("tentando criar usuario");
-  const { name, email, password, avatar } = req.body;
+  const { username, name, email, password, avatar } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -120,6 +121,7 @@ exports.criarUsuario = async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const novoUsuario = new User({
+    username,
     name,
     email,
     password: hashedPassword,
@@ -153,25 +155,20 @@ exports.criarUsuario = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-    console.log('entrei 1');
     const { email, password } = req.body;
   try {
     const usuario = await User.findOne({ email });
-    console.log('entrei 2');
     
     if (!usuario) {
       return res.status(401).json({ message: "Usuário inexistente!" });
     }
-    console.log('entrei 3');
 
     bcrypt.compare(password, usuario.password, (error, data) => {
-      console.log('entrei 4 COMPARADO');
       if (error) {
         throw error;
       }
 
       if (data) {
-        console.log('entrei assiandn');
         const loginToken = jsonwebtoken.sign(
           {
             id: usuario._id,
@@ -182,8 +179,6 @@ exports.login = async (req, res) => {
           "starlit-secret",
           { expiresIn: "12h" },
         );
-
-        console.log('LOGUEI O: ', usuario.name)
 
         res
           .status(200)

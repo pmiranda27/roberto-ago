@@ -8,4 +8,6 @@ router.post('/messages', messageController.sendMessage);
 // Rota para obter mensagens entre dois usuários
 router.get('/messages', messageController.getMessages);
 
+router.delete('/messages/:id', messageController.deleteMessage);
+
 module.exports = router;
