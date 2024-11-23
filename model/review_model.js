@@ -6,6 +6,7 @@ const reviewSchema = new mongoose.Schema({
   descricao: String,
   assistidoPor: Array,
   nota: Number,
+  autorReview: String,
   comentarios: Array,
   privado: {
     type: Boolean,

@@ -2,17 +2,24 @@ const Review = require("../model/review_model");
 const User = require("../model/user_model");
 
 exports.Review = async (req, res) => {
-  const { name, email, avaliacao } = req.body;
+    const { titulo, email, descricao, rating, privado} = req.body;
   
   const usuario = await User.findOne({ email })
   if (!usuario){
     res.status(401).json({message: 'Usuário não encontrado!'});
   }
+
+  const listaAssistidos = [];
+  listaAssistidos.push(usuario.username);
+  
+  const avaliador = usuario.username;
   
   const novoReview = new Review({
-    name,
-    email,
-    avaliacao,
+    tituloFilme: titulo,
+    descricao: descricao,
+    nota: rating,
+    autorReview: avaliador,
+    assistidoPor: listaAssistidos,
     privado: privado || false  //Eu defini 'privado' como false se não for fornecido
   });
   
