@@ -12,17 +12,15 @@ const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Types;
 
 exports.buscarAmigos = async (req, res) => {
-  const { email } = req.body;
+  const { username } = req.body;
 
   try {
-    const findUser = await User.findOne({ email });
+    const findUser = await User.findOne({ username });
+    
     const listaAmigos = findUser.amigos;
-    console.log(listaAmigos)
     return res.status(200).json(listaAmigos);
   } catch (err) {
-    return res
-      .status(400)
-      .json({ message: `Usuário: ${email} não encontrado` });
+    return res.status(400).json({ message: `Usuário: ${username} não encontrado` });
   }
 };
 
@@ -94,8 +92,6 @@ exports.removerAmigo = async (req, res) => {
     { returnOriginal: false },
   );
 
-  console.log("findUser: ", findUser);
-  console.log("findFriend: ", findFriend);
 
   if (!findUser || !findFriend) {
     return res.status(500).json({ message: "Erro ao remover amigos" });
@@ -105,7 +101,6 @@ exports.removerAmigo = async (req, res) => {
 };
 
 exports.criarUsuario = async (req, res) => {
-  console.log("tentando criar usuario");
   const { username, name, email, password, avatar } = req.body;
 
   const existingUser = await User.findOne({ email });
@@ -182,7 +177,7 @@ exports.login = async (req, res) => {
 
         res
           .status(200)
-          .json({ message: "Login realizado com sucesso!", usuario: usuario.name, avatar: usuario.avatar, token: loginToken });
+          .json({ message: "Login realizado com sucesso!", usuario: usuario.username, avatar: usuario.avatar, token: loginToken });
       } else {
         res.status(401).json({ message: "Senha incorreta!" });
       }
@@ -219,10 +214,9 @@ exports.buscarUsuarios = async (req, res) => {
 exports.buscarUsuarioPorEmail = async (req, res) => {
   try {
     const { email } = req.body;
-    console.log(`Buscando usuário com e-mail: ${email}`); // Adicione este log para depuração
 
     const usuario = await User.findOne({ email: email });
-    console.log(`Usuário encontrado: ${usuario}`); // Adicione este log para depuração
+
     if (!usuario) {
       return res.status(404).json({ message: "Usuário não encontrado!" });
     }
@@ -432,7 +426,6 @@ exports.responderNotificacao = async (req, res) => {
 
   switch (listaNotificacoes[indexNotificacao].type) {
     case "friend-request":
-      console.log("Tipo de notificação: friend-request");
 
       if (response === true) {
         for (const friend of findUser.amigos) {
@@ -545,7 +538,6 @@ exports.responderNotificacao = async (req, res) => {
             .status(200)
             .json({ message: "Notificação recusada com sucesso" });
         } catch (err) {
-          console.log("Falhei", err);
           return res
             .status(500)
             .json({ message: `Erro ao recusar notificação ${err}` });
@@ -698,7 +690,6 @@ exports.favoritarFilme = async (req, res) => {
 
     res.status(201).json({ message: 'Filme favoritado com sucesso!' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Erro ao favoritar o filme', error });
   }
 };
@@ -716,7 +707,40 @@ exports.retirarFavorito = async (req, res) => {
 
     res.status(200).json({ message: 'Filme removido dos favoritos com sucesso!' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Erro ao remover o filme dos favoritos', error });
   }
 };
+
+
+exports.buscarDescricao = async (req, res) => {
+  const { username } = req.body;
+
+  try {
+    const usuario = await User.findOne({ username });
+    if(!usuario){
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    return res.status(200).json({
+      descricao: usuario.description,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Houve um erro no servidor durante a busca da descrição",
+      erro: error,
+    });
+  }
+}
+
+exports.buscarAvatar = async (req, res) => {
+  const username = req.query.nickname;
+
+  const user = await User.findOne({ username })
+  if(!user) {
+    return res.status(404).json({ message: "Usuário não encontrado" });
+  }
+
+  return res.status(200).json({
+    avatar: user.avatar,
+  });
+}

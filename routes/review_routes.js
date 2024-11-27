@@ -3,7 +3,10 @@ const router = express.Router();
 const reviewController = require('../controllers/review_controller');
 
 router.post('/', reviewController.Review);
-//rota para buscar todos os produtos
+
+router.post('/quantidadeUsuario', reviewController.QuantidadeReviews)
+
+router.get('/', reviewController.GetReviews)
 
 module.exports = router;
 
