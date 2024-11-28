@@ -160,7 +160,7 @@ exports.login = async (req, res) => {
     const usuario = await User.findOne({ email });
     
     if (!usuario) {
-      console.log('nao achou usuario');
+      
       return res.status(400).json({ message: "Usuário não existe!" });
     }
 
@@ -185,7 +185,7 @@ exports.login = async (req, res) => {
           .status(200)
           .json({ message: "Login realizado com sucesso!", usuario: usuario.username, avatar: usuario.avatar, token: loginToken });
       } else {
-        console.log('senha errada');
+        
         return res.status(400).json({ message: "Senha incorreta!" });
       }
     });
