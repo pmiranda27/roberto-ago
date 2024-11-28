@@ -103,9 +103,14 @@ exports.removerAmigo = async (req, res) => {
 exports.criarUsuario = async (req, res) => {
   const { username, name, email, password, avatar } = req.body;
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return res.status(400).json({ message: "Usuário já existe!" });
+  const existingUserEmail = await User.findOne({ email });
+  if (existingUserEmail) {
+    return res.status(400).json({ message: "Email está sendo utilizado por outra conta!" });
+  }
+  
+  const existingUserUsername = await User.findOne({ username });
+  if (existingUserUsername) {
+    return res.status(400).json({ message: "Apelido está sendo utilizado por outra conta!" });
   }
 
   var userAvatar;
@@ -155,12 +160,13 @@ exports.login = async (req, res) => {
     const usuario = await User.findOne({ email });
     
     if (!usuario) {
-      return res.status(401).json({ message: "Usuário inexistente!" });
+      console.log('nao achou usuario');
+      return res.status(400).json({ message: "Usuário não existe!" });
     }
 
     bcrypt.compare(password, usuario.password, (error, data) => {
       if (error) {
-        throw error;
+        throw error
       }
 
       if (data) {
@@ -179,7 +185,8 @@ exports.login = async (req, res) => {
           .status(200)
           .json({ message: "Login realizado com sucesso!", usuario: usuario.username, avatar: usuario.avatar, token: loginToken });
       } else {
-        res.status(401).json({ message: "Senha incorreta!" });
+        console.log('senha errada');
+        return res.status(400).json({ message: "Senha incorreta!" });
       }
     });
   } catch (error) {
