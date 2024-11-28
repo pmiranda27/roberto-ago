@@ -22,15 +22,17 @@ exports.Review = async (req, res) => {
 
   const avaliador = usuario.username;
 
+  const imagemFilme = filme.imagem;
+
   const novoReview = new Review({
     tituloFilme: titulo,
     descricao: descricao,
     autorAvatar: usuario.avatar,
-    banner: filme.imagem,
+    bannerFilme: imagemFilme,
     nota: nota,
     filmeId: filme._id,
     autorReview: avaliador,
-    assistidoPor: listaAssistidos,
+    // assistidoPor: listaAssistidos,
     privado: privado || false, //Eu defini 'privado' como false se não for fornecido
   });
 
@@ -97,5 +99,18 @@ exports.QuantidadeReviews = async (req, res) => {
 
 exports.GetReviews = async (req, res) => {  
   const listaReviews = await Review.find({ privado: false });
+  return res.status(200).json(listaReviews);
+}
+
+exports.GetReviewsPorFilme = async (req, res) => {
+  const titulo = req.query.tituloFilme;
+
+  const filme = await Movie.findOne({ nome: titulo });
+  if (!filme) {
+    return res.status(401).json({ message: "Filme não encontrado!" });
+  }
+
+  const listaReviews = await Review.find({ filmeId: filme._id });
+  
   return res.status(200).json(listaReviews);
 }

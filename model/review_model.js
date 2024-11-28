@@ -5,9 +5,10 @@ const reviewSchema = new mongoose.Schema({
   bannerFilme: String,
   filmeId: mongoose.ObjectId,
   descricao: String,
-  assistidoPor: Array,
+  // assistidoPor: Array,
   nota: Number,
   autorReview: String,
+  autorAvatar: String,
   comentarios: Array,
   privado: {
     type: Boolean,

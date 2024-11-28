@@ -7,6 +7,7 @@ router.post('/', reviewController.Review);
 router.post('/quantidadeUsuario', reviewController.QuantidadeReviews)
 
 router.get('/', reviewController.GetReviews)
+router.get('/get-reviews-por-filme', reviewController.GetReviewsPorFilme);
 
 module.exports = router;
 
