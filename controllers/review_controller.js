@@ -3,7 +3,7 @@ const User = require("../model/user_model");
 const Movie = require("../model/movie_model");
 
 exports.Review = async (req, res) => {
-  const { titulo, email, descricao, rating, privado } = req.body;
+  const { titulo, email, descricao, nota, privado } = req.body;
 
   const usuario = await User.findOne({ email });
   if (!usuario) {
@@ -25,7 +25,9 @@ exports.Review = async (req, res) => {
   const novoReview = new Review({
     tituloFilme: titulo,
     descricao: descricao,
-    nota: rating,
+    autorAvatar: usuario.avatar,
+    banner: filme.imagem,
+    nota: nota,
     filmeId: filme._id,
     autorReview: avaliador,
     assistidoPor: listaAssistidos,
