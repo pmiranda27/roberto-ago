@@ -28,6 +28,7 @@ router.post('/verificacao', userController.verificarEmail);
 
 router.post('/delete', userController.deletarUsuario);
 router.post('/atualizar-avatar', userController.atualizarAvatar);
+router.post('/atualizar-email', userController.atualizarEmail);
 router.post('/atualizar-bio', userController.atualizarBio);
 router.post('/atualizar-senha', userController.atualizarSenha);
 

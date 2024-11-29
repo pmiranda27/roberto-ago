@@ -557,6 +557,23 @@ exports.responderNotificacao = async (req, res) => {
   }
 };
 
+exports.atualizarEmail = async (req, res) => {
+  const { oldEmail, newEmail } = req.body;
+
+  const findUser = await User.findOne({ email: oldEmail });
+  if (!findUser) {
+    return res.status(404).json({ message: "Usuário não encontrado" });
+  }
+
+  try {
+    findUser.email = newEmail;
+    findUser.save();
+    return res.status(200).json({ message: "Email atualizado com sucesso" });
+  } catch (err) {
+    return res.status(500).json({ message: "Erro ao atualizar o email" });
+  }
+}
+
 exports.atualizarAvatar = async (req, res) => {
   const { email, avatar } = req.body;
 
@@ -575,15 +592,15 @@ exports.atualizarAvatar = async (req, res) => {
 };
 
 exports.atualizarBio = async (req, res) => {
-  const { email, bio } = req.body;
+  const { username, bio } = req.body;
 
-  const findUser = await User.findOne({ email });
+  const findUser = await User.findOne({ username });
   if (!findUser) {
     return res.status(404).json({ message: "Usuário não encontrado" });
   }
 
   try {
-    findUser.bio = bio;
+    findUser.description = bio;
     findUser.save();
     return res.status(200).json({ message: "Bio atualizada com sucesso" });
   } catch (err) {
@@ -592,15 +609,17 @@ exports.atualizarBio = async (req, res) => {
 };
 
 exports.atualizarSenha = async (req, res) => {
+    const { username, senha } = req.body;
+  
   try {
-    const { email, senha } = req.body;
-
-    const findUser = await User.findOne({ email });
+    const findUser = await User.findOne({ username });
     if (!findUser) {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
 
-    findUser.password = senha;
+    const hashedPassword = await bcrypt.hash(senha, 10);
+    
+    findUser.password = hashedPassword;
     findUser.save();
     return res.status(200).json({ message: "Senha atualizada com sucesso" });
   } catch (error) {
