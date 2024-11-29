@@ -17,8 +17,6 @@ router.post('/enviar-notificacao', userController.criarNotificacao);
 router.post('/remover-notificacao', userController.removerNotificacao);
 router.post('/responder-notificacao', userController.responderNotificacao);
 
-router.post('/descricao-usuario', userController.buscarDescricao)
-
 router.post('/add-friend', userController.adicionarAmigo);
 
 router.post('/remove-friend', userController.removerAmigo);
@@ -34,6 +32,6 @@ router.post('/atualizar-bio', userController.atualizarBio);
 router.post('/atualizar-senha', userController.atualizarSenha);
 
 router.get('/avatar-usuario', userController.buscarAvatar);
-
+router.get('/descricao-usuario', userController.buscarDescricao)
 
 module.exports = router;

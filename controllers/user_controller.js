@@ -720,7 +720,7 @@ exports.retirarFavorito = async (req, res) => {
 
 
 exports.buscarDescricao = async (req, res) => {
-  const { username } = req.body;
+  const username = req.query.username;
 
   try {
     const usuario = await User.findOne({ username });
@@ -728,9 +728,10 @@ exports.buscarDescricao = async (req, res) => {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
 
-    return res.status(200).json({
-      descricao: usuario.description,
-    });
+    const descricao = usuario.description;
+    
+    return res.status(200).json({descricao});
+    
   } catch (error) {
     return res.status(500).json({
       message: "Houve um erro no servidor durante a busca da descrição",
