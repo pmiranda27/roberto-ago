@@ -1,5 +1,5 @@
 // importar a lib do meu banco de dados
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 // Criar um objeto do tipo Schema
 const moviesSchema = new mongoose.Schema({
@@ -7,7 +7,7 @@ const moviesSchema = new mongoose.Schema({
   nome: String,
   duracao: Number,
   categoria: String,
-  classificacaoIndicativa: String,
+  classificacaoIndicativa : String,
   detalhes: {
     diretor: String,
     produtora: String,
@@ -19,5 +19,5 @@ const moviesSchema = new mongoose.Schema({
   imagem: String,
 });
 
-const Movie = mongoose.model("filmes", moviesSchema);
+const Movie = mongoose.model('filmes', moviesSchema);
 module.exports = Movie;

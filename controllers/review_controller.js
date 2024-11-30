@@ -2,6 +2,23 @@ const Review = require("../model/review_model");
 const User = require("../model/user_model");
 const Movie = require("../model/movie_model");
 
+exports.GetReviewPorId = async (req, res) => {
+    const reviewId = req.query.reviewId;
+
+  console.log(reviewId);
+  
+  try {
+    const review = await Review.findById(reviewId);
+    
+    if (!review) {
+      return res.status(404).json({ message: "Review não encontrado" });
+    }
+    return res.status(200).json(review);
+  } catch (error) {
+    return res.status(500).json({ message: "Erro ao buscar review", error });
+  }
+}
+
 exports.Review = async (req, res) => {
   const { titulo, email, descricao, nota, privado } = req.body;
 
@@ -96,11 +113,10 @@ exports.QuantidadeReviews = async (req, res) => {
   }
 };
 
-
-exports.GetReviews = async (req, res) => {  
+exports.GetReviews = async (req, res) => {
   const listaReviews = await Review.find({ privado: false });
   return res.status(200).json(listaReviews);
-}
+};
 
 exports.GetReviewsPorFilme = async (req, res) => {
   const titulo = req.query.tituloFilme;
@@ -111,6 +127,6 @@ exports.GetReviewsPorFilme = async (req, res) => {
   }
 
   const listaReviews = await Review.find({ filmeId: filme._id });
-  
+
   return res.status(200).json(listaReviews);
-}
+};

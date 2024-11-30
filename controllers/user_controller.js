@@ -16,7 +16,7 @@ exports.buscarAmigos = async (req, res) => {
 
   try {
     const findUser = await User.findOne({ username });
-    
+
     const listaAmigos = findUser.amigos;
     return res.status(200).json(listaAmigos);
   } catch (err) {
@@ -107,7 +107,7 @@ exports.criarUsuario = async (req, res) => {
   if (existingUserEmail) {
     return res.status(400).json({ message: "Email está sendo utilizado por outra conta!" });
   }
-  
+
   const existingUserUsername = await User.findOne({ username });
   if (existingUserUsername) {
     return res.status(400).json({ message: "Apelido está sendo utilizado por outra conta!" });
@@ -158,9 +158,9 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
   try {
     const usuario = await User.findOne({ email });
-    
+
     if (!usuario) {
-      
+
       return res.status(400).json({ message: "Usuário não existe!" });
     }
 
@@ -185,7 +185,7 @@ exports.login = async (req, res) => {
           .status(200)
           .json({ message: "Login realizado com sucesso!", usuario: usuario.username, avatar: usuario.avatar, token: loginToken });
       } else {
-        
+
         return res.status(400).json({ message: "Senha incorreta!" });
       }
     });
@@ -610,7 +610,7 @@ exports.atualizarBio = async (req, res) => {
 
 exports.atualizarSenha = async (req, res) => {
     const { username, senha } = req.body;
-  
+
   try {
     const findUser = await User.findOne({ username });
     if (!findUser) {
@@ -618,7 +618,7 @@ exports.atualizarSenha = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(senha, 10);
-    
+
     findUser.password = hashedPassword;
     findUser.save();
     return res.status(200).json({ message: "Senha atualizada com sucesso" });
@@ -748,9 +748,9 @@ exports.buscarDescricao = async (req, res) => {
     }
 
     const descricao = usuario.description;
-    
+
     return res.status(200).json({descricao});
-    
+
   } catch (error) {
     return res.status(500).json({
       message: "Houve um erro no servidor durante a busca da descrição",
