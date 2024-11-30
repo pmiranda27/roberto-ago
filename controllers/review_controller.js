@@ -2,6 +2,8 @@ const Review = require("../model/review_model");
 const User = require("../model/user_model");
 const Movie = require("../model/movie_model");
 
+const mongoose = require("mongoose");
+
 exports.GetReviewPorId = async (req, res) => {
     const reviewId = req.query.reviewId;
 
@@ -9,11 +11,13 @@ exports.GetReviewPorId = async (req, res) => {
   
   try {
     const review = await Review.findById(reviewId);
-    
+    console.log('review: ', review)
+
     if (!review) {
       return res.status(404).json({ message: "Review não encontrado" });
     }
-    return res.status(200).json(review);
+    
+    return res.status(200).json({review});
   } catch (error) {
     return res.status(500).json({ message: "Erro ao buscar review", error });
   }
