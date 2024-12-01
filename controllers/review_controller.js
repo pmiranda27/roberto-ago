@@ -4,10 +4,52 @@ const Movie = require("../model/movie_model");
 
 const mongoose = require("mongoose");
 
-exports.GetReviewPorId = async (req, res) => {
-    const reviewId = req.query.reviewId;
+const ComentarioModel = require("../model/comentario_model");
 
-  console.log(reviewId);
+exports.SendCommentReview = async (req, res) => {
+  const { reviewId, username, conteudo, avatar } = req.body;
+
+  try {
+    const review = await Review.findById(reviewId);
+
+    if (!review) {
+      return res.status(404).json({ message: "Review não encontrado" });
+    }
+
+    const id = new mongoose.Types.ObjectId();
+
+    const comentario = new ComentarioModel(id, username, conteudo, avatar)
+
+    review.comentarios.push(comentario);
+
+    review.save();
+    return res.status(201).json({ message: 'Comentário enviado com sucesso!' });
+  } catch (error) {
+    return res.status(500).json({ message: "Falha ao enviar comentário", error });
+  }
+}
+
+exports.GetComentariosPorId = async (req, res) => {
+  const reviewId = req.query.reviewId;
+
+  try {
+    const review = await Review.findById(reviewId);
+    console.log('review: ', review)
+
+    if (!review) {
+      return res.status(404).json({ message: "Review não encontrado" });
+    }
+
+    const comentarios = review.comentarios;
+
+    return res.status(200).json({comentarios});
+  } catch (error) {
+    return res.status(500).json({ message: "Erro ao buscar review", error });
+  }
+}
+
+exports.GetReviewPorId = async (req, res) => {
+  const reviewId = req.query.reviewId;
   
   try {
     const review = await Review.findById(reviewId);

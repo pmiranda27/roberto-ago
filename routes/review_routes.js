@@ -10,5 +10,8 @@ router.get('/', reviewController.GetReviews)
 router.get('/get-reviews-por-filme', reviewController.GetReviewsPorFilme);
 
 router.get('/get-review-por-id', reviewController.GetReviewPorId);
+router.get('/get-comentarios-por-id', reviewController.GetComentariosPorId);
+
+router.post('/send-comment-review', reviewController.SendCommentReview);
 
 module.exports = router;
