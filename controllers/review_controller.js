@@ -6,6 +6,46 @@ const mongoose = require("mongoose");
 
 const ComentarioModel = require("../model/comentario_model");
 
+exports.GetComentariosPorUsername = async (req, res) => {
+  const username = req.query.nickname;
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    // Busca todos os reviews que possuem comentários do usuário
+    const reviews = await Review.find({ "comentarios.username": username });
+
+    // Extrai os comentários desse autor
+    const comentarios = reviews.flatMap(review =>
+      review.comentarios.filter(comentario => comentario.username === username)
+    );
+
+    return res.status(200).json({ comentarios });
+  } catch (error) {
+    return res.status(500).json({ message: "Erro ao buscar comentários", error });
+  }
+};
+
+
+exports.GetReviewsPorUsuario = async (req, res) => {
+  const username = req.query.nickname;
+  
+  try{
+    const reviews = await Review.find({ autorReview: username });
+    if(!reviews) {
+      return res.status(404).json({ message: "Reviews não encontradas" });
+    }
+
+    return res.status(200).json({ reviews });
+    
+  } catch (err) {
+    return res.status(500).json({ message: "Erro ao buscar reviews", error: err });
+  }
+}
+
 exports.SendCommentReview = async (req, res) => {
   const { reviewId, username, conteudo, avatar } = req.body;
 
@@ -16,18 +56,21 @@ exports.SendCommentReview = async (req, res) => {
       return res.status(404).json({ message: "Review não encontrado" });
     }
 
-    const id = new mongoose.Types.ObjectId();
-
-    const comentario = new ComentarioModel(id, username, conteudo, avatar)
+    const comentario = new ComentarioModel({
+      username: username,
+      conteudo: conteudo,
+      avatar: avatar,
+    });
 
     review.comentarios.push(comentario);
+    await review.save();
 
-    review.save();
     return res.status(201).json({ message: 'Comentário enviado com sucesso!' });
   } catch (error) {
     return res.status(500).json({ message: "Falha ao enviar comentário", error });
   }
-}
+};
+
 
 exports.GetComentariosPorId = async (req, res) => {
   const reviewId = req.query.reviewId;

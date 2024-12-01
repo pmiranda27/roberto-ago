@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const ComentarioModel = require('./comentario_model');
+
 
 const reviewSchema = new mongoose.Schema({
   tituloFilme: String,
@@ -6,7 +8,7 @@ const reviewSchema = new mongoose.Schema({
   descricao: String,
   assistidoPor: Array,
   nota: Number,
-  comentarios: Array,
+  comentarios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comentario' }],
   privado: {
     type: Boolean,
     default: false

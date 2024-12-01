@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-class ComentarioModel {
-  constructor(id, author, conteudo, avatar) {
-    this._id = id,
-    this.author = author;
-    this.conteudo = conteudo;
-    this.avatar = avatar;
-  }
-}
+const comentarioSchema = new mongoose.Schema({
+  username: { type: String, required: true },
+  conteudo: { type: String, required: true },
+  avatar: { type: String },
+  createdAt: { type: Date, default: Date.now },
+});
+
+const ComentarioModel = mongoose.model('Comentario', comentarioSchema);
 
 module.exports = ComentarioModel;
