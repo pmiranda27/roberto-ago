@@ -54,19 +54,22 @@ exports.SendCommentReview = async (req, res) => {
   const { reviewId, username, conteudo, avatar } = req.body;
 
   try {
+    // Encontrar a review
     const review = await Review.findById(reviewId);
 
     if (!review) {
       return res.status(404).json({ message: "Review não encontrado" });
     }
 
-    const comentario = new ComentarioModel({
+    // Criar o novo comentário
+    const novoComentario = {
       username: username,
       conteudo: conteudo,
       avatar: avatar,
-    });
+    };
 
-    review.comentarios.push(comentario);
+    // Adicionar ao array de comentários
+    review.comentarios.push(novoComentario);
     await review.save();
 
     return res.status(201).json({ message: "Comentário enviado com sucesso!" });
@@ -76,6 +79,7 @@ exports.SendCommentReview = async (req, res) => {
       .json({ message: "Falha ao enviar comentário", error });
   }
 };
+
 
 exports.GetComentariosPorId = async (req, res) => {
   const reviewId = req.query.reviewId;

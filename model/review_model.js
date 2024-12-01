@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
-const ComentarioModel = require('./comentario_model');
 
+const comentarioSchema = new mongoose.Schema({
+  _id: { type: mongoose.Schema.Types.ObjectId, default: () => new mongoose.Types.ObjectId() },
+  username: { type: String, required: true },
+  conteudo: { type: String, required: true },
+  avatar: { type: String },
+  createdAt: { type: Date, default: Date.now },
+});
 
 const reviewSchema = new mongoose.Schema({
   tituloFilme: String,
@@ -10,12 +16,12 @@ const reviewSchema = new mongoose.Schema({
   autorAvatar: String,
   autorReview: String,
   nota: Number,
-  comentarios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comentario' }],
+  comentarios: [comentarioSchema],
   privado: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
-const Review = mongoose.model('review', reviewSchema);
+const Review = mongoose.model('Review', reviewSchema);
 module.exports = Review;
