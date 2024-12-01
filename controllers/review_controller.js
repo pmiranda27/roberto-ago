@@ -66,6 +66,7 @@ exports.SendCommentReview = async (req, res) => {
       username: username,
       conteudo: conteudo,
       avatar: avatar,
+      tituloFilme: review.tituloFilme
     };
 
     // Adicionar ao array de comentários
