@@ -19,32 +19,36 @@ exports.GetComentariosPorUsername = async (req, res) => {
     const reviews = await Review.find({ "comentarios.username": username });
 
     // Extrai os comentários desse autor
-    const comentarios = reviews.flatMap(review =>
-      review.comentarios.filter(comentario => comentario.username === username)
+    const comentarios = reviews.flatMap((review) =>
+      review.comentarios.filter(
+        (comentario) => comentario.username === username,
+      ),
     );
 
     return res.status(200).json({ comentarios });
   } catch (error) {
-    return res.status(500).json({ message: "Erro ao buscar comentários", error });
+    return res
+      .status(500)
+      .json({ message: "Erro ao buscar comentários", error });
   }
 };
 
-
 exports.GetReviewsPorUsuario = async (req, res) => {
   const username = req.query.nickname;
-  
-  try{
+
+  try {
     const reviews = await Review.find({ autorReview: username });
-    if(!reviews) {
+    if (!reviews) {
       return res.status(404).json({ message: "Reviews não encontradas" });
     }
 
     return res.status(200).json({ reviews });
-    
   } catch (err) {
-    return res.status(500).json({ message: "Erro ao buscar reviews", error: err });
+    return res
+      .status(500)
+      .json({ message: "Erro ao buscar reviews", error: err });
   }
-}
+};
 
 exports.SendCommentReview = async (req, res) => {
   const { reviewId, username, conteudo, avatar } = req.body;
@@ -65,19 +69,20 @@ exports.SendCommentReview = async (req, res) => {
     review.comentarios.push(comentario);
     await review.save();
 
-    return res.status(201).json({ message: 'Comentário enviado com sucesso!' });
+    return res.status(201).json({ message: "Comentário enviado com sucesso!" });
   } catch (error) {
-    return res.status(500).json({ message: "Falha ao enviar comentário", error });
+    return res
+      .status(500)
+      .json({ message: "Falha ao enviar comentário", error });
   }
 };
-
 
 exports.GetComentariosPorId = async (req, res) => {
   const reviewId = req.query.reviewId;
 
   try {
     const review = await Review.findById(reviewId);
-    console.log('review: ', review)
+    console.log("review: ", review);
 
     if (!review) {
       return res.status(404).json({ message: "Review não encontrado" });
@@ -85,28 +90,28 @@ exports.GetComentariosPorId = async (req, res) => {
 
     const comentarios = review.comentarios;
 
-    return res.status(200).json({comentarios});
+    return res.status(200).json({ comentarios });
   } catch (error) {
     return res.status(500).json({ message: "Erro ao buscar review", error });
   }
-}
+};
 
 exports.GetReviewPorId = async (req, res) => {
   const reviewId = req.query.reviewId;
-  
+
   try {
     const review = await Review.findById(reviewId);
-    console.log('review: ', review)
+    console.log("review: ", review);
 
     if (!review) {
       return res.status(404).json({ message: "Review não encontrado" });
     }
-    
-    return res.status(200).json({review});
+
+    return res.status(200).json({ review });
   } catch (error) {
     return res.status(500).json({ message: "Erro ao buscar review", error });
   }
-}
+};
 
 exports.Review = async (req, res) => {
   const { titulo, email, descricao, nota, privado } = req.body;

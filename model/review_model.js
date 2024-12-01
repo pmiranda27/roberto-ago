@@ -7,6 +7,8 @@ const reviewSchema = new mongoose.Schema({
   bannerFilme: String,
   descricao: String,
   assistidoPor: Array,
+  autorAvatar: String,
+  autorReview: String,
   nota: Number,
   comentarios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comentario' }],
   privado: {
