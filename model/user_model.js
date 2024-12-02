@@ -18,32 +18,25 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    },
+  },
   description: {
     type: String,
-    default: ''
+    default: "",
   },
   avatar: {
     type: String,
-    requireed: true,
-    default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+    required: true,
+    default:
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
   },
   amigos: {
     type: Array
   },
-  reviews: {
-    type: Array
-  },
-  comments: {
-    type: Array
-  },
-  notifications: {
-    type: Array
-  },
-  friendRequests: {
-    type: Array
-  }
+  reviews: Array,
+  comments: Array,
+  notifications: Array,
+  friendRequests: Array,
 });
 
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model("User", userSchema);
 module.exports = User;

@@ -11,6 +11,50 @@ const mongoose = require("mongoose");
 
 const { ObjectId } = mongoose.Types;
 
+
+exports.enviarMensagem = async (req, res) => {
+  const { receiver, sender, content } = req.body;
+
+  try {
+    // Verifica se o receptor existe
+    const receiverUser = await User.findOne({ username: receiver });
+    if (!receiverUser) {
+      return res.status(404).json({ error: "Usuário receptor não encontrado" });
+    }
+
+    // Verifica se o remetente existe
+    const senderUser = await User.findOne({ username: sender });
+    if (!senderUser) {
+      return res.status(404).json({ error: "Usuário remetente não encontrado" });
+    }
+
+    // Cria a mensagem
+    const message = {
+      sender: sender,
+      content: content,
+      timestamp: new Date(),
+    };
+
+    // Atualiza as mensagens do receptor
+    await User.updateOne(
+      { username: receiver },
+      { $push: { amigos: { username: sender, messages: [message] } } }
+    );
+
+    // Atualiza as mensagens do remetente
+    await User.updateOne(
+      { username: sender },
+      { $push: { amigos: { username: receiver, messages: [message] } } }
+    );
+
+    return res.status(200).json({ message: "Mensagem enviada com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao enviar mensagem:", error);
+    return res.status(500).json({ error: "Erro interno do servidor" });
+  }
+};
+
+
 exports.buscarAmigos = async (req, res) => {
   const { username } = req.body;
 
@@ -389,7 +433,7 @@ exports.criarNotificacao = async (req, res) => {
   );
 
   const newFriendRequest = new FriendRequestModel(sender, receiver);
-
+  
   try {
     if (
       type === "friend-request" &&

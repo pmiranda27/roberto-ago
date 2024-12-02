@@ -10,6 +10,8 @@ router.post('/register', userController.criarUsuario);
 router.post('/login', userController.login);
 router.post('/verify-email', userController.verificarEmail);
 
+router.post('/enviar-mensagem', userController.enviarMensagem);
+
 router.get('/lista-usuarios', userController.buscarUsuarios);
 router.post('/lista-notificacoes', userController.buscarNotificacoes);
 

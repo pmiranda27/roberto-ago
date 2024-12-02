@@ -54,22 +54,20 @@ exports.SendCommentReview = async (req, res) => {
   const { reviewId, username, conteudo, avatar } = req.body;
 
   try {
-    // Encontrar a review
     const review = await Review.findById(reviewId);
 
     if (!review) {
       return res.status(404).json({ message: "Review não encontrado" });
     }
 
-    // Criar o novo comentário
     const novoComentario = {
       username: username,
       conteudo: conteudo,
       avatar: avatar,
+      filmeId: review._id,
       tituloFilme: review.tituloFilme
     };
 
-    // Adicionar ao array de comentários
     review.comentarios.push(novoComentario);
     await review.save();
 
@@ -82,12 +80,12 @@ exports.SendCommentReview = async (req, res) => {
 };
 
 
+
 exports.GetComentariosPorId = async (req, res) => {
   const reviewId = req.query.reviewId;
 
   try {
     const review = await Review.findById(reviewId);
-    console.log("review: ", review);
 
     if (!review) {
       return res.status(404).json({ message: "Review não encontrado" });
@@ -106,7 +104,6 @@ exports.GetReviewPorId = async (req, res) => {
 
   try {
     const review = await Review.findById(reviewId);
-    console.log("review: ", review);
 
     if (!review) {
       return res.status(404).json({ message: "Review não encontrado" });
@@ -156,7 +153,6 @@ exports.Review = async (req, res) => {
     await novoReview.save();
     res.status(201).json({ message: "Avaliado com Sucesso!" });
   } catch (error) {
-    console.log(error);
     res
       .status(500)
       .json({ message: "Houve um erro durante a avaliação", error });

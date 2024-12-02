@@ -10,4 +10,3 @@ class NotificacaoModel {
 }
 
 module.exports = NotificacaoModel
-  

@@ -4,7 +4,6 @@ const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
 
-
 const webSocket = require('ws');
 const webSocketController = require('./controllers/web_socket_chat')
 
@@ -20,7 +19,7 @@ const app = express();
 const corsOptions = {
   origin: '*',
   methods: 'GET, POST, PUT, DELETE, OPTIONS',
-  allowedHeaders: 'Content-Type, Authorization', 
+  allowedHeaders: 'Content-Type', 
 };
 
 //define os middlewares
