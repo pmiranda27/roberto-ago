@@ -186,7 +186,7 @@ exports.criarUsuario = async (req, res) => {
       { expiresIn: "12h" },
     );
 
-    res.status(201).json({
+    return res.status(201).json({
       message: "Usuário cadastrado com sucesso!",
       token: newUserToken,
     });
@@ -781,6 +781,16 @@ exports.retirarFavorito = async (req, res) => {
   }
 };
 
+exports.detalhesUsuario = async (req, res) => {
+  const {username} = req.body;
+
+  const user = await User.findOne({ username });
+  if (!user) {
+    return res.status(404).json({ message: 'Usuário não encontrado' });
+  }
+
+  return res.status(200).json(user);
+}
 
 exports.buscarDescricao = async (req, res) => {
   const username = req.query.username;

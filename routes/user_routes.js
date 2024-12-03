@@ -37,4 +37,6 @@ router.post('/atualizar-senha', userController.atualizarSenha);
 router.get('/avatar-usuario', userController.buscarAvatar);
 router.get('/descricao-usuario', userController.buscarDescricao)
 
+router.post('/detalhes-usuario', userController.detalhesUsuario);
+
 module.exports = router;

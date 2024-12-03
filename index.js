@@ -22,10 +22,8 @@ const corsOptions = {
   allowedHeaders: 'Content-Type', 
 };
 
-//define os middlewares
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
-app.use(cookieParser());
 app.use(express.json());
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*"); // Allow requests from any origin
@@ -39,6 +37,8 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use(cookieParser());
 
 //define o ponto de partida da aplicação
 
